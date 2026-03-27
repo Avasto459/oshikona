@@ -36,72 +36,65 @@ export class PinComponent implements OnInit {
     this.pin = '';
     this.repeatPin = '';
   }
+async handleBiometric(type: string) {
+  try {
+    // 1. Санҷиши мавҷудият
+    if (!window.PublicKeyCredential) {
+      alert("Браузери шумо WebAuthn-ро дастгирӣ намекунад. Chrome-ро истифода баред.");
+      return;
+    }
 
-  async handleBiometric(type: string) {
-    try {
-      // 1. Санҷиши мавҷудияти функсия дар браузер
-      if (typeof window.PublicKeyCredential === 'undefined') {
-        alert("Браузери шумо биометрияро дастгирӣ намекунад. Лутфан Chrome ё Safari-ро истифода баред.");
-        return;
-      }
+    // 2. Санҷиши дастгирии платформа (Android/iOS)
+    const isAvailable = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    if (!isAvailable) {
+      alert("Дар телефонатон биометрия (ангушт/рӯй) фаъол нест ё дастгирӣ намешавад.");
+      return;
+    }
 
-      // 2. Санҷиши фаъол будани биометрия дар телефон
-      const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-      if (!available) {
-        alert("Дар танзимоти телефон Face ID ё Fingerprint фаъол нест.");
-        return;
-      }
+    // 3. Танзимоти махсус барои Android Chrome
+    const challenge = crypto.getRandomValues(new Uint8Array(32));
+    const userId = crypto.getRandomValues(new Uint8Array(16));
 
-      // 3. Тайёр кардани маълумот (Challenge ва ID)
-      const challengeBuffer = crypto.getRandomValues(new Uint8Array(32));
-      const userIdBuffer = crypto.getRandomValues(new Uint8Array(16));
+    const options: PublicKeyCredentialCreationOptions = {
+      challenge: challenge,
+      rp: { 
+        name: "Oshiqona", 
+        id: window.location.hostname // Ин муҳим аст, ки маҳз домени Vercel бошад
+      },
+      user: {
+        id: userId,
+        name: "avesto@oshiqona.tj",
+        displayName: "Avesto"
+      },
+      pubKeyCredParams: [
+        { alg: -7, type: "public-key" },   // ES256 (стандарт барои Android)
+        { alg: -257, type: "public-key" }  // RS256 (барои моделҳои кӯҳна)
+      ],
+      authenticatorSelection: {
+        authenticatorAttachment: "platform",
+        userVerification: "preferred", // ДИҚҚАТ: "preferred" дар Android беҳтар кор мекунад
+        residentKey: "preferred"
+      },
+      timeout: 60000
+    };
 
-      // 4. Танзимоти универсалӣ
-      const options: PublicKeyCredentialCreationOptions = {
-        challenge: challengeBuffer,
-        rp: { 
-          name: "Oshiqona App", 
-          id: window.location.hostname // Ин барои Vercel муҳим аст
-        },
-        user: {
-          id: userIdBuffer,
-          name: "user@tcell.tj",
-          displayName: "Avesto"
-        },
-        pubKeyCredParams: [
-          { alg: -7, type: "public-key" },    // ES256 (барои iOS ва Android)
-          { alg: -257, type: "public-key" }   // RS256 (барои баъзе Android-ҳо)
-        ],
-        authenticatorSelection: { 
-          authenticatorAttachment: "platform",
-          userVerification: "required", // Маҷбур сохтани Face ID/Fingerprint
-          residentKey: "preferred"
-        },
-        timeout: 60000
-      };
+    // 4. Даъвати тиреза
+    const credential = await navigator.credentials.create({ publicKey: options });
 
-      // 5. Иҷрои амалиёт (Намоиши тирезаи Face ID / Fingerprint)
-      const credential = await navigator.credentials.create({ publicKey: options });
+    if (credential) {
+      alert("Тасдиқ шуд! Акнун шумо метавонед ворид шавед.");
+      // this.router.navigate(['/home']);
+    }
 
-      if (credential) {
-        alert("Муваффақият! Биометрия тасдиқ шуд.");
-        // Агар хоҳӣ баъди тасдиқ ба саҳифаи дигар гузарӣ:
-        // this.router.navigate(['/home']);
-      }
-
-    } catch (err: any) {
-      console.error("Biometric Error:", err);
-      
-      // Хатогиҳои маъмулро ба забони тоҷикӣ мефаҳмонем
-      if (err.name === 'NotAllowedError') {
-        alert("Шумо тасдиқро рад кардед ё тирезаро пӯшидед.");
-      } else if (err.name === 'SecurityError') {
-        alert("Хатогии амният: Домени сайт бо танзимот мувофиқ нест.");
-      } else {
-        alert("Хатогӣ: " + err.message);
-      }
+  } catch (err: any) {
+    console.error(err);
+    if (err.name === 'NotAllowedError') {
+      alert("Шумо тирезаро бастед ё рад кардед.");
+    } else {
+      alert("Хатогӣ дар Android: " + err.message);
     }
   }
+}
 
   skipBiometrics() {
     console.log('Гузаштан аз танзими биометрия');
