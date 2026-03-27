@@ -27,12 +27,13 @@
 
   <div class="form-group">
     <div class="input-field">
-      <label>PIN код</label>
-      <input type="password" [(ngModel)]="pin" placeholder="Введите PIN" class="custom-input" maxlength="4">
+      <label>{{ activeTab === 'set' ? 'PIN код' : 'Старый PIN код' }}</label>
+      <input type="password" [(ngModel)]="pin" placeholder="****" class="custom-input" maxlength="4">
     </div>
+
     <div class="input-field">
-      <label>Повтор ввода PIN</label>
-      <input type="password" [(ngModel)]="repeatPin" placeholder="Введите PIN" class="custom-input" maxlength="4">
+      <label>{{ activeTab === 'set' ? 'Повтор ввода PIN' : 'Новый PIN код' }}</label>
+      <input type="password" [(ngModel)]="repeatPin" placeholder="****" class="custom-input" maxlength="4">
     </div>
   </div>
 
