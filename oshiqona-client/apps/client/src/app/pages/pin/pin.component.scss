@@ -4,75 +4,75 @@
   flex-direction: column;
   align-items: center;
   padding: 40px 20px;
-  background: radial-gradient(circle at top right, rgba(219, 39, 239, 0.1), transparent), #ffffff;
+  background: #fff;
 
-  .header-section {
-    width: 100%;
-    max-width: 360px;
-    text-align: center;
-    margin-bottom: 30px;
-
-    .title { font-size: 28px; font-weight: 700; margin-bottom: 20px; }
-
-    .tab-container {
-      display: flex;
-      background: #f3f4f6;
-      border-radius: 15px;
-      padding: 4px;
-
-      button {
-        flex: 1; padding: 10px; border: none; border-radius: 12px;
-        background: transparent; cursor: pointer; transition: 0.3s;
-        &.active { background: #a100ff; color: white; }
-      }
-    }
+  .title {
+    font-size: 28px;
+    margin-bottom: 20px;
   }
 
-  .main-illustration {
-    margin-bottom: 40px;
-    .shield-circle {
-      width: 80px; height: 80px; background: white; border-radius: 20px;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #f0f0f0;
-      .icon-shield { width: 40px; stroke: #333; fill: none; stroke-width: 1.5; }
+  .tab-container {
+    display: flex;
+    background: #eee;
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 20px;
+
+    button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      border-radius: 10px;
+
+      &.active {
+        background: purple;
+        color: #fff;
+      }
     }
   }
 
   .form-group {
-    width: 100%; max-width: 360px;
-    .input-field {
-      margin-bottom: 15px;
-      label { display: block; margin-bottom: 8px; font-size: 14px; color: #666; }
-      .custom-input {
-        width: 100%; padding: 15px; border: 1.5px solid #d8b4fe;
-        border-radius: 18px; outline: none; transition: 0.3s;
-        &:focus { border-color: #a100ff; box-shadow: 0 0 0 4px rgba(161, 0, 255, 0.1); }
-      }
+    width: 100%;
+    max-width: 300px;
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 10px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
     }
   }
 
-  .biometric-section {
+  .biometric-box {
     margin: 30px 0;
-    .bio-icons-container {
-      display: flex; gap: 40px; justify-content: center;
-      .bio-item {
-        cursor: pointer; transition: 0.2s;
-        &:active { transform: scale(0.9); }
-        img { width: 60px; height: 60px; opacity: 0.7; }
-      }
+    text-align: center;
+    cursor: pointer;
+
+    img {
+      width: 60px;
+      margin-bottom: 10px;
     }
   }
 
-  .actions {
-    width: 100%; max-width: 360px; margin-top: auto;
-    display: flex; flex-direction: column; gap: 12px;
-    .btn-submit {
-      padding: 18px; border-radius: 15px; background: #a100ff;
-      color: white; border: none; font-weight: 600; cursor: pointer;
-    }
-    .btn-skip {
-      padding: 18px; border-radius: 15px; background: white;
-      color: #666; border: 1px solid #e5e7eb; cursor: pointer;
-    }
+  .btn-main {
+    width: 100%;
+    max-width: 300px;
+    padding: 15px;
+    background: purple;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+
+  .btn-skip {
+    width: 100%;
+    max-width: 300px;
+    padding: 15px;
+    background: #eee;
+    border: none;
+    border-radius: 12px;
   }
 }
