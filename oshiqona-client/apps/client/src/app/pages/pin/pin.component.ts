@@ -33,43 +33,50 @@ export class PinComponent implements OnInit {
     this.pin = '';
     this.repeatPin = '';
   }
-
- async handleBiometric(type: string) {
+async handleBiometric(type: string) {
   try {
-    // 1. Санҷиш: Оё дастгоҳ биометрия дорад?
     const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
     
     if (available) {
-      // 2. Сохтани "Challenge" (код барои бехатарӣ)
-      const challenge = new Uint8Array(32);
-      window.crypto.getRandomValues(challenge);
+      // Android талаб мекунад, ки Challenge ва User ID ҳатман Buffer бошанд
+      const challenge = crypto.getRandomValues(new Uint8Array(32));
+      const userId = crypto.getRandomValues(new Uint8Array(16));
 
-      // 3. Танзимоти WebAuthn барои даъвати тирезаи СИСТЕМАВӢ
       const options: PublicKeyCredentialCreationOptions = {
         challenge: challenge,
-        rp: { name: "Oshiqona App", id: window.location.hostname },
+        rp: { 
+          name: "Oshiqona App", 
+          id: window.location.hostname // Боварӣ ҳосил кун, ки дар HTTPS ҳастӣ
+        },
         user: {
-          id: new Uint8Array([1, 2, 3, 4]),
+          id: userId,
           name: "avesta@tcell.tj",
           displayName: "Avesto"
         },
-        pubKeyCredParams: [{ alg: -7, type: "public-key" }],
-        authenticatorSelection: { authenticatorAttachment: "platform" },
+        pubKeyCredParams: [
+          { alg: -7, type: "public-key" }, // ES256
+          { alg: -257, type: "public-key" } // RS256 барои баъзе Android-ҳо
+        ],
+        authenticatorSelection: { 
+          authenticatorAttachment: "platform",
+          userVerification: "required", // Барои Android ин муҳим аст
+          residentKey: "preferred"
+        },
         timeout: 60000
       };
 
-      // 4. ДАЪВАТИ ТИРЕЗАИ ҲАҚИҚӢ (ИН ҶО ТИРЕЗАИ FACE ID МЕБАРОЯД)
       const credential = await navigator.credentials.create({ publicKey: options });
       
       if (credential) {
-        alert("Табрик! Биометрия тасдиқ шуд.");
+        alert("Биометрия дар Android тасдиқ шуд!");
       }
     } else {
-      alert("Дар ин дастгоҳ биометрия ёфт нашуд.");
+      alert("Дар ин телефон биометрия (изи ангушт ё рӯй) ёфт нашуд ё фаъол нест.");
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    alert("Хатогӣ: Барои биометрия HTTPS лозим аст!");
+    // Ин alert ба ту мегӯяд, ки маҳз чӣ хато дорад
+    alert("Хатогӣ дар Android: " + err.message);
   }
 }
   skipBiometrics() {
