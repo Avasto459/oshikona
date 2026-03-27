@@ -37,46 +37,47 @@ async handleBiometric(type: string) {
   try {
     const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
     
-    if (available) {
-      // Истифодаи crypto барои Challenge ва User ID (барои Android муҳим аст)
-      const challengeBuffer = crypto.getRandomValues(new Uint8Array(32));
-      const userIdBuffer = crypto.getRandomValues(new Uint8Array(16));
+    if (!available) {
+      alert("Дар ин дастгоҳ биометрия фаъол нест ё дастгирӣ намешавад.");
+      return;
+    }
 
-      const options: PublicKeyCredentialCreationOptions = {
-        challenge: challengeBuffer,
-        rp: { 
-          name: "Oshiqona App", 
-          id: window.location.hostname // Ин ба таври автоматӣ домени Vercel-ро мегирад
-        },
-        user: {
-          id: userIdBuffer,
-          name: "avesta@tcell.tj",
-          displayName: "Avesto"
-        },
-        pubKeyCredParams: [
-          { alg: -7, type: "public-key" },   // ES256 (барои iOS/Android)
-          { alg: -257, type: "public-key" }  // RS256 (барои баъзе Android-ҳо)
-        ],
-        authenticatorSelection: { 
-          authenticatorAttachment: "platform",
-          userVerification: "required", // Барои Face ID-и iPhone ҳатмист
-          residentKey: "preferred"
-        },
-        timeout: 60000
-      };
+    // Сохтани Challenge ва ID (барои Android ва iOS муҳим аст)
+    const challenge = crypto.getRandomValues(new Uint8Array(32));
+    const userId = crypto.getRandomValues(new Uint8Array(16));
 
-      const credential = await navigator.credentials.create({ publicKey: options });
-      
-      if (credential) {
-        alert("Табрик! Биометрия бо муваффақият тасдиқ шуд.");
-      }
-    } else {
-      alert("Дар ин дастгоҳ биометрия ёфт нашуд. Боварӣ ҳосил кунед, ки Face ID ё Fingerprint дар танзимоти телефон фаъол аст.");
+    const options: PublicKeyCredentialCreationOptions = {
+      challenge: challenge,
+      rp: { 
+        name: "Oshiqona App", 
+        id: window.location.hostname 
+      },
+      user: {
+        id: userId,
+        name: "user@tcell.tj",
+        displayName: "Avesto"
+      },
+      pubKeyCredParams: [
+        { alg: -7, type: "public-key" },   // ES256 (стандарти асосӣ)
+        { alg: -257, type: "public-key" }  // RS256 (барои Android-ҳои кӯҳна)
+      ],
+      authenticatorSelection: { 
+        authenticatorAttachment: "platform",
+        userVerification: "preferred", // Ислоҳи муҳим: "preferred" барои Android беҳтар аст
+        residentKey: "preferred"
+      },
+      timeout: 60000
+    };
+
+    const credential = await navigator.credentials.create({ publicKey: options });
+    
+    if (credential) {
+      alert("Тасдиқ шуд! Акнун ҳам Face ID ва ҳам Fingerprint бояд кор кунад.");
     }
   } catch (err: any) {
-    console.error("Biometric Error:", err);
-    // Ин alert ба мо мегӯяд, ки чаро iPhone ё Android онро блок кард
-    alert("Хатогии биометрия: " + err.message);
+    console.error(err);
+    // Ин alert ба мо мегӯяд, ки чаро блок шуд
+    alert("Хатогӣ: " + err.name + "\n" + err.message);
   }
 }
   skipBiometrics() {
