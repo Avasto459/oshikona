@@ -1,0 +1,134 @@
+<div class="flex items-center justify-center min-h-screen bg-background relative overflow-hidden">
+  <!-- Theme toggle -->
+  <button
+    (click)="toggleTheme()"
+    class="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-foreground shadow-lg hover:bg-secondary transition-colors tui-button--icon"
+  >
+    <svg *ngIf="!isDark" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+    <svg *ngIf="isDark" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="123" y1="1" x2="12" y2="3"></line>
+      <line x1="122" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="10.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </button>
+
+  <!-- Full-screen layout -->
+  <div class="relative w-full max-w-[420px] min-h-screen sm:min-h-0 sm:h-[852px] bg-background sm:rounded-[40px] overflow-hidden sm:shadow-2xl">
+    <!-- Decorative purple circles -->
+    <app-decorative-blob [size]="63" [top]="32" [left]="0" [opacity]="0.3" [delay]="0"></app-decorative-blob>
+    <app-decorative-blob [size]="83" [top]="32" [left]="'39%'" [opacity]="0.2" [delay]="0.5"></app-decorative-blob>
+    <app-decorative-blob [size]="70" [top]="100" [left]="'58%'" [opacity]="0.7" [blur]="true" [delay]="1"></app-decorative-blob>
+    <app-decorative-blob [size]="60" [top]="385" [left]="44" [opacity]="1" [delay]="1.5"></app-decorative-blob>
+    <app-decorative-blob [size]="36" [top]="237" [left]="38" [opacity]="0.4" [delay]="2"></app-decorative-blob>
+
+    <!-- Avatar circles with sphere animation -->
+    <app-avatar-circle [src]="avatarMain" [size]="183" [top]="69" [left]="46" [border]="true" [delay]="0"></app-avatar-circle>
+    <app-avatar-circle [src]="avatar2" [size]="99" [top]="237" [left]="'51%'" [border]="true" [delay]="0.3"></app-avatar-circle>
+    <app-avatar-circle [src]="avatar3" [size]="54" [top]="156" [left]="'75%'" [delay]="0.6"></app-avatar-circle>
+    <app-avatar-circle [src]="avatar4" [size]="73" [top]="348" [left]="63" [border]="true" [delay]="0.9"></app-avatar-circle>
+  
+
+    <!-- Glass Panel -->
+    <div class="glass-panel"></div>
+
+    <!-- Form Content -->
+    <form (ngSubmit)="onSubmit()" class="absolute w-[312px] h-[44px] left-8 right-8 sm:left-10 sm:right-10 top-[449px] flex flex-col gap-4">
+      <!-- Phone Input -->
+      <app-input-field label="Ваш номер">
+        <div class="flex items-center gap-3 px-3">
+          <input
+            type="tel"
+            [(ngModel)]="phone"
+            name="phone"
+            class="flex-1 h-11 bg-transparent text-foreground text-sm tracking-tight outline-none"
+          />
+          <img [src]="tcellLogo" alt="Tcell" class="h-[16px] w-[47px] object-contain" />
+          <button type="button" (click)="clearPhone()" class="relative w-6 h-6 flex items-center justify-center flex-shrink-0 text-foreground">
+            <div class="absolute inset-0 rounded-full bg-[hsl(var(--clear-btn-bg))]/20"></div>
+            <svg class="w-3 h-3 relative z-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </app-input-field>
+
+      <!-- Password Input -->
+      <app-input-field label="Пароль">
+        <div class="flex items-center gap-3 px-3">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            [(ngModel)]="password"
+            name="password"
+            class="flex-1 h-11 bg-transparent text-foreground text-sm tracking-tight outline-none"
+          />
+          <button
+            type="button"
+            (click)="togglePasswordVisibility()"
+            class="w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <svg *ngIf="!showPassword" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg *ngIf="showPassword" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </button>
+          <button type="button" (click)="clearPassword()" class="relative w-6 h-6 flex items-center justify-center flex-shrink-0 text-foreground">
+            <div class="absolute inset-0 rounded-full bg-[hsl(var(--clear-btn-bg))]/20"></div>
+            <svg class="w-3 h-3 relative z-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </app-input-field>
+
+      <!-- SMS Code Input -->
+      <app-input-field label="SMS Код">
+        <div class="flex items-center gap-3 px-3">
+          <input
+            type="text"
+            [(ngModel)]="smsCode"
+            name="smsCode"
+            placeholder="Введите код"
+            class="flex-1 h-11 bg-transparent text-foreground text-sm tracking-tight outline-none placeholder:text-[hsl(var(--placeholder-color))]"
+          />
+          <div class="flex items-center justify-center h-[17px] w-[39px] text-[16px] px-2 rounded-[10.5px] bg-[hsl(var(--timer-bg))] text-[hsl(var(--timer-text))] text-sm whitespace-nowrap">
+            {{ getTimerText() }}
+          </div>
+        </div>
+      </app-input-field>
+
+      <!-- Continue Button -->
+      <div class="pt-2">
+        <button
+          type="submit"
+          class="w-[312px] h-[44px] rounded-[9px] text-primary-foreground text-base text-[16px] tracking-tight flex items-center justify-center font-medium transition-transform active:scale-[0.98] tui-button--primary"
+          style="background: linear-gradient(180deg, #821EBE 0%, #AF00BC 100%)"
+        >
+          Продолжить
+        </button>
+      </div>
+
+      <!-- Register Button -->
+      <button
+        type="button"
+        (click)="onRegister()"
+        class="w-[312px] h-[44px] top-[] rounded-[9px] bg-transparent text-foreground text-base tracking-tight flex items-center justify-center -mt-2 hover:bg-secondary/20 transition-colors tui-button--secondary"
+      >
+        Регистрация
+      </button>
+    </form>
+  </div>
+</div>

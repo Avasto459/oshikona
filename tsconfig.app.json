@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": []
+  },
+  "files": [
+    "oshiqona-client/apps/client/src/main.ts"
+  ],
+  "include": [
+    "oshiqona-client/apps/client/src/**/*.d.ts"
+  ]
+}

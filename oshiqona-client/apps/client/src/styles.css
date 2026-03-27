@@ -1,0 +1,173 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Taiga UI Styling for buttons */
+.tui-button--primary {
+  appearance: none;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tui-button--primary:active {
+  transform: scale(0.98);
+}
+
+.tui-button--secondary {
+  appearance: none;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.tui-button--secondary:hover {
+  background-color: rgba(var(--secondary-rgb), 0.2);
+}
+
+.tui-button--icon {
+  appearance: none;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+
+    --primary: 276 73% 43%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 296 100% 37%;
+
+    --secondary: 280 100% 83%;
+    --secondary-foreground: 276 73% 43%;
+
+    --muted: 0 0% 54%;
+    --muted-foreground: 0 0% 54%;
+
+    --accent: 280 100% 83%;
+    --accent-foreground: 276 73% 43%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 276 73% 43%;
+    --input: 0 0% 85%;
+    --ring: 276 73% 43%;
+
+    --radius: 22px;
+
+    --gradient-primary: linear-gradient(90deg, hsl(276, 73%, 43%) 0%, hsl(296, 100%, 37%) 100%);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-blur: blur(20px);
+    --glass-bottom-bg: rgba(255, 255, 255, 0.8);
+    --glass-bottom-border: rgba(60, 60, 67, 0.36);
+    --home-indicator: 0 0% 0%;
+    --lock-icon-color: rgba(60, 60, 67, 0.6);
+    --chevron-color: rgba(60, 60, 67, 0.6);
+    --timer-bg: 280 100% 83%;
+    --timer-text: 0 0% 0%;
+    --placeholder-color: 0 0% 54%;
+    --clear-btn-bg: 0 0% 0%;
+    --phone-bg: 0 0% 100%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 0 0% 7%;
+    --foreground: 0 0% 100%;
+
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 276 73% 43%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 296 100% 37%;
+
+    --secondary: 280 40% 25%;
+    --secondary-foreground: 280 100% 83%;
+
+    --muted: 0 0% 40%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 280 40% 25%;
+    --accent-foreground: 280 100% 83%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 276 50% 35%;
+    --input: 0 0% 20%;
+    --ring: 276 73% 43%;
+
+    --gradient-primary: linear-gradient(90deg, hsl(276, 73%, 43%) 0%, hsl(296, 100%, 37%) 100%);
+    --glass-bg: rgba(30, 30, 30, 0.7);
+    --glass-blur: blur(20px);
+    --glass-bottom-bg: rgba(20, 20, 20, 0.85);
+    --glass-bottom-border: rgba(255, 255, 255, 0.1);
+    --home-indicator: 0 0% 100%;
+    --lock-icon-color: rgba(255, 255, 255, 0.5);
+    --chevron-color: rgba(255, 255, 255, 0.5);
+    --timer-bg: 276 50% 25%;
+    --timer-text: 0 0% 100%;
+    --placeholder-color: 0 0% 45%;
+    --clear-btn-bg: 0 0% 100%;
+    --phone-bg: 0 0% 12%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Sphere floating animation */
+@keyframes sphere-float {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  25% {
+    transform: translateY(-8px) scale(1.02);
+  }
+  50% {
+    transform: translateY(-4px) scale(0.98);
+  }
+  75% {
+    transform: translateY(-12px) scale(1.01);
+  }
+}
+
+.animate-sphere {
+  animation: sphere-float 6s ease-in-out infinite;
+}

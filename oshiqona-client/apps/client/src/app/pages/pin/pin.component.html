@@ -1,0 +1,58 @@
+<div class="pin-wrapper">
+  <header class="header-section">
+    <h1 class="title">Pin</h1>
+    <div class="tab-container">
+      <button 
+        type="button" 
+        [class.active]="activeTab === 'set'" 
+        (click)="setTab('set')">
+        Установить PIN
+      </button>
+      <button 
+        type="button" 
+        [class.active]="activeTab === 'change'" 
+        (click)="setTab('change')">
+        Сменить PIN
+      </button>
+    </div>
+  </header>
+
+  <div class="main-illustration">
+    <div class="shield-circle">
+      <svg viewBox="0 0 24 24" class="icon-shield">
+        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="input-field">
+      <label>PIN код</label>
+      <input type="password" [(ngModel)]="pin" placeholder="Введите PIN" class="custom-input" maxlength="4">
+    </div>
+    <div class="input-field">
+      <label>Повтор ввода PIN</label>
+      <input type="password" [(ngModel)]="repeatPin" placeholder="Введите PIN" class="custom-input" maxlength="4">
+    </div>
+  </div>
+
+  <div class="biometric-section">
+    <div class="bio-icons-container">
+      <div class="bio-item" (click)="handleBiometric('faceid')">
+        <img src="assets/icons/face-id.png" alt="FaceID">
+      </div>
+      <div class="bio-item" (click)="handleBiometric('fingerprint')">
+        <img src="assets/icons/fingerprint.png" alt="Fingerprint">
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn-submit" (click)="handleBiometric('general')">
+      Настройте биометрию
+    </button>
+    <button type="button" class="btn-skip" (click)="skipBiometrics()">
+      Пропустить
+    </button>
+  </div>
+</div>

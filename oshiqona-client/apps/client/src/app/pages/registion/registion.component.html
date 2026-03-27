@@ -1,0 +1,63 @@
+<div class="flex items-center justify-center min-h-screen bg-background relative overflow-hidden">
+  <!-- Toggle theme (агар лозим) -->
+  <button
+    (click)="toggleTheme()"
+    class="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-foreground shadow-lg hover:bg-secondary transition-colors"
+  >
+    <svg *ngIf="!isDark" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+    <svg *ngIf="isDark" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </button>
+
+  <div class="relative w-full max-w-[420px] min-h-screen sm:min-h-0 sm:h-[852px] bg-background sm:rounded-[40px] overflow-hidden sm:shadow-2xl">
+    <!-- Decorative blobs -->
+    <app-decorative-blob [size]="63" [top]="32" [left]="0" [opacity]="0.3" [delay]="0" [style.animation-delay]="'0s'"></app-decorative-blob>
+    <app-decorative-blob [size]="83" [top]="32" [left]="'39%'" [opacity]="0.2" [delay]="0.5" [style.animation-delay]="'0.5s'"></app-decorative-blob>
+    <app-decorative-blob [size]="70" [top]="100" [left]="'58%'" [opacity]="0.7" [blur]="true" [delay]="1" [style.animation-delay]="'1s'"></app-decorative-blob>
+    <app-decorative-blob [size]="60" [top]="385" [left]="44" [opacity]="1" [delay]="1.5" [style.animation-delay]="'1.5s'"></app-decorative-blob>
+    <app-decorative-blob [size]="36" [top]="237" [left]="38" [opacity]="0.4" [delay]="2" [style.animation-delay]="'2s'"></app-decorative-blob>
+
+    <!-- Avatar circles -->
+    <app-avatar-circle [src]="avatarMain" [size]="183" [top]="69" [left]="46" [border]="true" [delay]="0" [style.animation-delay]="'0s'"></app-avatar-circle>
+    <app-avatar-circle [src]="avatar2" [size]="99" [top]="237" [left]="'51%'" [border]="true" [delay]="0.3" [style.animation-delay]="'0.3s'"></app-avatar-circle>
+    <app-avatar-circle [src]="avatar3" [size]="54" [top]="156" [left]="'75%'" [delay]="0.6" [style.animation-delay]="'0.6s'"></app-avatar-circle>
+    <app-avatar-circle [src]="avatar4" [size]="73" [top]="348" [left]="63" [border]="true" [delay]="0.9" [style.animation-delay]="'0.9s'"></app-avatar-circle>
+    <app-avatar-circle [src]="avatar5" [size]="39" [top]="287" [left]="136" [delay]="1.2" [style.animation-delay]="'1.2s'"></app-avatar-circle>
+
+    <div class="glass-panel"></div>
+
+    <form (ngSubmit)="onSubmit()" class="absolute w-[312px] left-8 right-8 sm:left-10 sm:right-10 top-[449px] flex flex-col gap-4">
+      <!-- Phone input -->
+      <app-input-field label="Ваш номер">
+        <div class="flex items-center gap-3 px-3">
+          <input type="tel" [(ngModel)]="phone" name="phone" class="flex-1 h-11 bg-transparent text-foreground outline-none" />
+          <img [src]="tcellLogo" class="h-[16px] w-[47px]" />
+          <button type="button" (click)="clearPhone()">✕</button>
+        </div>
+      </app-input-field>
+
+      <!-- Password input -->
+      <app-input-field label="Пароль">
+        <div class="flex items-center gap-3 px-3">
+          <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" class="flex-1 h-11 bg-transparent outline-none" />
+          <button type="button" (click)="togglePasswordVisibility()">👁️</button>
+          <button type="button" (click)="clearPassword()">✕</button>
+        </div>
+      </app-input-field>
+
+      <button type="submit" class="w-full h-[44px] rounded-[9px] text-white font-medium" style="background: linear-gradient(180deg, #821EBE 0%, #AF00BC 100%)">Войти</button>
+      <button type="button" (click)="onRegister()" class="w-full h-[44px] bg-transparent text-foreground">Регистрация</button>
+    </form>
+  </div>
+</div>
