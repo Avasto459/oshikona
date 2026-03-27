@@ -38,28 +38,28 @@ async handleBiometric(type: string) {
     const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
     
     if (available) {
-      // Android талаб мекунад, ки Challenge ва User ID ҳатман Buffer бошанд
-      const challenge = crypto.getRandomValues(new Uint8Array(32));
-      const userId = crypto.getRandomValues(new Uint8Array(16));
+      // Истифодаи crypto барои Challenge ва User ID (барои Android муҳим аст)
+      const challengeBuffer = crypto.getRandomValues(new Uint8Array(32));
+      const userIdBuffer = crypto.getRandomValues(new Uint8Array(16));
 
       const options: PublicKeyCredentialCreationOptions = {
-        challenge: challenge,
+        challenge: challengeBuffer,
         rp: { 
           name: "Oshiqona App", 
-          id: window.location.hostname // Боварӣ ҳосил кун, ки дар HTTPS ҳастӣ
+          id: window.location.hostname // Ин ба таври автоматӣ домени Vercel-ро мегирад
         },
         user: {
-          id: userId,
+          id: userIdBuffer,
           name: "avesta@tcell.tj",
           displayName: "Avesto"
         },
         pubKeyCredParams: [
-          { alg: -7, type: "public-key" }, // ES256
-          { alg: -257, type: "public-key" } // RS256 барои баъзе Android-ҳо
+          { alg: -7, type: "public-key" },   // ES256 (барои iOS/Android)
+          { alg: -257, type: "public-key" }  // RS256 (барои баъзе Android-ҳо)
         ],
         authenticatorSelection: { 
           authenticatorAttachment: "platform",
-          userVerification: "required", // Барои Android ин муҳим аст
+          userVerification: "required", // Барои Face ID-и iPhone ҳатмист
           residentKey: "preferred"
         },
         timeout: 60000
@@ -68,15 +68,15 @@ async handleBiometric(type: string) {
       const credential = await navigator.credentials.create({ publicKey: options });
       
       if (credential) {
-        alert("Биометрия дар Android тасдиқ шуд!");
+        alert("Табрик! Биометрия бо муваффақият тасдиқ шуд.");
       }
     } else {
-      alert("Дар ин телефон биометрия (изи ангушт ё рӯй) ёфт нашуд ё фаъол нест.");
+      alert("Дар ин дастгоҳ биометрия ёфт нашуд. Боварӣ ҳосил кунед, ки Face ID ё Fingerprint дар танзимоти телефон фаъол аст.");
     }
   } catch (err: any) {
-    console.error(err);
-    // Ин alert ба ту мегӯяд, ки маҳз чӣ хато дорад
-    alert("Хатогӣ дар Android: " + err.message);
+    console.error("Biometric Error:", err);
+    // Ин alert ба мо мегӯяд, ки чаро iPhone ё Android онро блок кард
+    alert("Хатогии биометрия: " + err.message);
   }
 }
   skipBiometrics() {
