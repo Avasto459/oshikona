@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router'; // Барои гузаштан ба саҳифаи дигар
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pin',
@@ -16,7 +16,7 @@ export class PinComponent implements OnInit {
   repeatPin: string = '';
   deviceType: 'ios' | 'android' | 'web' = 'web';
 
-  constructor(private router: Router) {} // Илова кардани Router
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.detectDevice();
@@ -39,70 +39,72 @@ export class PinComponent implements OnInit {
 
   async handleBiometric(type: string) {
     try {
-      // 1. Санҷиши амният: Оё браузер WebAuthn-ро мефаҳмад?
-      if (!window.PublicKeyCredential) {
-        alert("Лутфан сайтро дар Chrome (Android) ё Safari (iOS) кушоед. Браузери ҳозира биометрияро дастгирӣ намекунад.");
+      // 1. Санҷиши мавҷудияти функсия дар браузер
+      if (typeof window.PublicKeyCredential === 'undefined') {
+        alert("Браузери шумо биометрияро дастгирӣ намекунад. Лутфан Chrome ё Safari-ро истифода баред.");
         return;
       }
 
-      // 2. Санҷиш: Оё дар телефон биометрия фаъол аст?
+      // 2. Санҷиши фаъол будани биометрия дар телефон
       const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-      
       if (!available) {
-        alert("Дар танзимоти телефонатон Face ID ё Fingerprint-ро фаъол кунед.");
+        alert("Дар танзимоти телефон Face ID ё Fingerprint фаъол нест.");
         return;
       }
 
-      // 3. Сохтани маълумоти амниятӣ (Challenge)
-      const challenge = crypto.getRandomValues(new Uint8Array(32));
-      const userId = crypto.getRandomValues(new Uint8Array(16));
+      // 3. Тайёр кардани маълумот (Challenge ва ID)
+      const challengeBuffer = crypto.getRandomValues(new Uint8Array(32));
+      const userIdBuffer = crypto.getRandomValues(new Uint8Array(16));
 
-      // 4. Танзимот барои ҳам Android ва ҳам iOS
+      // 4. Танзимоти универсалӣ
       const options: PublicKeyCredentialCreationOptions = {
-        challenge: challenge,
+        challenge: challengeBuffer,
         rp: { 
           name: "Oshiqona App", 
-          id: window.location.hostname 
+          id: window.location.hostname // Ин барои Vercel муҳим аст
         },
         user: {
-          id: userId,
+          id: userIdBuffer,
           name: "user@tcell.tj",
           displayName: "Avesto"
         },
         pubKeyCredParams: [
-          { alg: -7, type: "public-key" },   // ES256 (стандарти iOS ва Android)
-          { alg: -257, type: "public-key" }  // RS256 (барои телефонҳои кӯҳна)
+          { alg: -7, type: "public-key" },    // ES256 (барои iOS ва Android)
+          { alg: -257, type: "public-key" }   // RS256 (барои баъзе Android-ҳо)
         ],
         authenticatorSelection: { 
           authenticatorAttachment: "platform",
-          userVerification: "required", // "required" маҳз Face ID-ро дар iPhone маҷбур мекунад
+          userVerification: "required", // Маҷбур сохтани Face ID/Fingerprint
           residentKey: "preferred"
         },
         timeout: 60000
       };
 
-      // 5. ДАЪВАТИ ТИРЕЗАИ СИСТЕМАВӢ (Face ID ё Fingerprint)
+      // 5. Иҷрои амалиёт (Намоиши тирезаи Face ID / Fingerprint)
       const credential = await navigator.credentials.create({ publicKey: options });
-      
+
       if (credential) {
-        alert("Табрик! Биометрия бо муваффақият тасдиқ шуд.");
-        // Ин ҷо метавонӣ корбарро ба саҳифаи асосӣ равон кунӣ
-        // this.router.navigate(['/home']); 
+        alert("Муваффақият! Биометрия тасдиқ шуд.");
+        // Агар хоҳӣ баъди тасдиқ ба саҳифаи дигар гузарӣ:
+        // this.router.navigate(['/home']);
       }
 
     } catch (err: any) {
-      console.error("Biometric error:", err);
-      // Агар корбар худаш тирезаро пӯшад (Cancel пахш кунад)
+      console.error("Biometric Error:", err);
+      
+      // Хатогиҳои маъмулро ба забони тоҷикӣ мефаҳмонем
       if (err.name === 'NotAllowedError') {
-        console.log("Корбар тасдиқро рад кард.");
+        alert("Шумо тасдиқро рад кардед ё тирезаро пӯшидед.");
+      } else if (err.name === 'SecurityError') {
+        alert("Хатогии амният: Домени сайт бо танзимот мувофиқ нест.");
       } else {
-        alert("Хатогии техникӣ: " + err.message);
+        alert("Хатогӣ: " + err.message);
       }
     }
   }
 
   skipBiometrics() {
     console.log('Гузаштан аз танзими биометрия');
-    // Ин ҷо ҳам метавонӣ navigate кунӣ
+    // Ин ҷо метавонӣ navigate кунӣ ба саҳифаи асосӣ
   }
 }
