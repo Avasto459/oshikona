@@ -1,42 +1,138 @@
 <div class="pin-wrapper">
+  <header class="header-section">
+    <h1 class="title">Pin</h1>
+    <div class="tab-container">
+      <button
+        type="button"
+        [class.active]="activeTab === 'set'"
+        (click)="setTab('set')">
+        Установить PIN
+      </button>
+      <button
+        type="button"
+        [class.active]="activeTab === 'change'"
+        (click)="setTab('change')">
+        Сменить PIN
+      </button>
+    </div>
+  </header>
 
-  <h1 class="title">PIN</h1>
-
-  <div class="tab-container">
-    <button [class.active]="activeTab==='set'" (click)="setTab('set')">
-      Установить PIN
-    </button>
-    <button [class.active]="activeTab==='change'" (click)="setTab('change')">
-      Сменить PIN
-    </button>
+  <div class="main-illustration">
+    <div class="shield-circle">
+      <svg viewBox="0 0 24 24" class="icon-shield" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M9 12l2 2 4-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
   </div>
 
   <div class="form-group">
-    <input type="password" [(ngModel)]="pin" placeholder="Введите PIN" maxlength="4">
-    <input type="password" [(ngModel)]="repeatPin" placeholder="Повтор PIN" maxlength="4">
+    <div class="input-field">
+      <label for="pin-input">PIN код</label>
+      <input
+        id="pin-input"
+        type="password"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        [(ngModel)]="pin"
+        placeholder="Введите PIN"
+        class="custom-input"
+        maxlength="4"
+        autocomplete="new-password"
+      />
+    </div>
+    <div class="input-field">
+      <label for="repeat-pin-input">Повтор ввода PIN</label>
+      <input
+        id="repeat-pin-input"
+        type="password"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        [(ngModel)]="repeatPin"
+        placeholder="Введите PIN"
+        class="custom-input"
+        maxlength="4"
+        autocomplete="new-password"
+      />
+    </div>
   </div>
 
-  <!-- 🔥 Биометрия -->
-  <div class="biometric-box" (click)="handleBiometric()">
+  <!-- Биометрия иконкаҳо — танҳо агар дастгирӣ шавад -->
+  <div class="biometric-section" *ngIf="biometricSupported">
+    <div class="bio-icons-container">
 
-    <!-- iOS -->
-    <img *ngIf="deviceType==='ios'" src="assets/icons/face-id.png">
+      <!-- iOS: Face ID -->
+      <div
+        *ngIf="deviceType === 'ios'"
+        class="bio-item"
+        (click)="setupBiometric()"
+        title="Face ID"
+      >
+        <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Face ID frame -->
+          <rect x="2" y="2" width="56" height="56" rx="12" stroke="currentColor" stroke-width="2"/>
+          <!-- Eyes -->
+          <circle cx="21" cy="24" r="3" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="39" cy="24" r="3" stroke="currentColor" stroke-width="1.8"/>
+          <!-- Nose -->
+          <line x1="30" y1="26" x2="30" y2="32" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- Smile -->
+          <path d="M21 38 Q30 46 39 38" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span>Face ID</span>
+      </div>
 
-    <!-- Android -->
-    <img *ngIf="deviceType==='android'" src="assets/icons/fingerprint.png">
+      <!-- Android / Web: Fingerprint -->
+      <div
+        *ngIf="deviceType !== 'ios'"
+        class="bio-item"
+        (click)="setupBiometric()"
+        title="Отпечаток пальца"
+      >
+        <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 8C18 8 10 16 10 28c0 8 3 15 8 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M30 14c-8 0-14 6-14 14 0 6 2 11 6 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M30 20c-4 0-8 3-8 8 0 4 1.5 7.5 4 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="30" cy="28" r="3" stroke="currentColor" stroke-width="2"/>
+          <path d="M36 14c6 3 10 9 10 16 0 7-3 13-8 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M38 22c2 2 4 5 4 8 0 5-2 9-5 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>Отпечаток</span>
+      </div>
 
-    <!-- Web -->
-    <img *ngIf="deviceType==='web'" src="assets/icons/fingerprint.png">
-
-    <p>Войти с биометрией</p>
+    </div>
+    <p class="bio-hint">Барои тезтар воридшавӣ биометрияро танзим кунед</p>
   </div>
 
-  <button class="btn-main" (click)="handleBiometric()">
-    Настроить биометрию
-  </button>
+  <!-- Агар биометрия дастгирӣ нашавад -->
+  <div class="biometric-unavailable" *ngIf="!biometricSupported">
+    <p>Дар ин дастгоҳ биометрия дастгирӣ намешавад</p>
+  </div>
 
-  <button class="btn-skip" (click)="skipBiometrics()">
-    Пропустить
-  </button>
-
+  <div class="actions">
+    <button
+      type="button"
+      class="btn-submit"
+      (click)="setupBiometric()"
+      [disabled]="!biometricSupported"
+    >
+      Настройте биометрию
+    </button>
+    <button type="button" class="btn-skip" (click)="skipBiometrics()">
+      Пропустить
+    </button>
+  </div>
 </div>
