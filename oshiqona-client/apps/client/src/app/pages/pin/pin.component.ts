@@ -37,59 +37,47 @@ export class PinComponent implements OnInit {
     this.repeatPin = '';
   }
 
-  async handleBiometric() {
+  async handleBiometric(type: string) {
     try {
       if (!window.PublicKeyCredential) {
-        alert("Браузер биометрияро дастгирӣ намекунад");
+        alert("Браузери шумо WebAuthn-ро дастгирӣ намекунад. Chrome-ро истифода баред.");
         return;
       }
 
-      const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-
-      if (!available) {
-        alert("Face ID ё Fingerprint дар телефон фаъол нест");
+      const isAvailable = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+      if (!isAvailable) {
+        alert("Дар телефонатон биометрия (ангушт/рӯй) фаъол нест.");
         return;
       }
 
-      const challenge = new Uint8Array(32);
-      crypto.getRandomValues(challenge);
+      const options: PublicKeyCredentialCreationOptions = {
+        challenge: crypto.getRandomValues(new Uint8Array(32)),
+        rp: { name: "Oshiqona", id: window.location.hostname },
+        user: {
+          id: crypto.getRandomValues(new Uint8Array(16)),
+          name: "avesto@oshiqona.tj",
+          displayName: "Avesto"
+        },
+        pubKeyCredParams: [
+          { alg: -7, type: "public-key" },
+          { alg: -257, type: "public-key" }
+        ],
+        authenticatorSelection: {
+          authenticatorAttachment: "platform",
+          userVerification: "preferred",
+          residentKey: "preferred"
+        },
+        timeout: 60000
+      };
 
-      const userId = new Uint8Array(16);
-      crypto.getRandomValues(userId);
-
-      const credential = await navigator.credentials.create({
-        publicKey: {
-          challenge,
-          rp: {
-            name: "Oshiqona App"
-          },
-          user: {
-            id: userId,
-            name: "user@oshiqona.tj",
-            displayName: "User"
-          },
-          pubKeyCredParams: [
-            { alg: -7, type: "public-key" }
-          ],
-          authenticatorSelection: {
-            authenticatorAttachment: "platform",
-            userVerification: "required"
-          },
-          timeout: 60000,
-          attestation: "none"
-        }
-      });
-
+      const credential = await navigator.credentials.create({ publicKey: options });
       if (credential) {
-        alert("Муффақият! 🎉");
+        alert("Тасдиқ шуд! Акнун шумо метавонед ворид шавед.");
         this.router.navigate(['/home']);
       }
-
     } catch (err: any) {
-      console.error(err);
-
       if (err.name === 'NotAllowedError') {
-        alert("Шумо рад кардед ё бекор кардед");
+        alert("Шумо тирезаро бастед ё рад кардед.");
       } else {
         alert("Хатогӣ: " + err.message);
       }
@@ -99,4 +87,4 @@ export class PinComponent implements OnInit {
   skipBiometrics() {
     this.router.navigate(['/home']);
   }
-}
+} // Қавси ниҳоии класс
