@@ -1,94 +1,126 @@
 <div class="pin-wrapper">
 
-  <header class="header-section">
-    <h1 class="title">Pin</h1>
-    <div class="tab-container">
-      <button type="button" [class.active]="activeTab === 'set'" (click)="setTab('set')">
-        Установить PIN
-      </button>
-      <button type="button" [class.active]="activeTab === 'change'" (click)="setTab('change')">
-        Сменить PIN
-      </button>
-    </div>
-  </header>
+  <div class="content">
 
-  <div class="main-illustration">
-    <div class="shield-circle">
-      <img
-        src="https://cdn-icons-png.flaticon.com/512/6195/6195699.png"
-        alt="shield"
-        class="shield-img"
-      />
-    </div>
-  </div>
-
-  <div class="form-group">
-    <div class="input-field">
-      <label for="pin-input">PIN код</label>
-      <input
-        id="pin-input"
-        type="password"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        [(ngModel)]="pin"
-        placeholder="Введите PIN"
-        class="custom-input"
-        maxlength="4"
-        autocomplete="new-password"
-      />
-    </div>
-    <div class="input-field">
-      <label for="repeat-pin-input">Повтор ввода PIN</label>
-      <input
-        id="repeat-pin-input"
-        type="password"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        [(ngModel)]="repeatPin"
-        placeholder="Введите PIN"
-        class="custom-input"
-        maxlength="4"
-        autocomplete="new-password"
-      />
-    </div>
-  </div>
-
-  <!-- Ҳарду иконка ҳамеша нишон дода мешавад — *ngIf нест -->
-  <div class="biometric-section">
-    <div class="bio-icons-container">
-
-      <div class="bio-item" (click)="setupBiometric('faceid')">
-        <img
-          src="assets/icons/face-id.png"
-          alt="Face ID"
-          class="bio-img"
-        />
-        <span>Face ID</span>
+    <!-- Header -->
+    <header class="header-section">
+      <h1 class="title">Pin</h1>
+      <div class="tab-container">
+        <button type="button" [class.active]="activeTab === 'set'" (click)="setTab('set')">
+          Установить PIN
+        </button>
+        <button type="button" [class.active]="activeTab === 'change'" (click)="setTab('change')">
+          Сменить PIN
+        </button>
       </div>
+    </header>
 
-      <div class="bio-item" (click)="setupBiometric('fingerprint')">
+    <!-- Shield -->
+    <div class="main-illustration">
+      <div class="shield-circle">
         <img
-          src="assets/icons/fingerprint.png"
-          alt="Fingerprint"
-          class="bio-img"
+          src="https://cdn-icons-png.flaticon.com/512/6195/6195699.png"
+          alt="shield"
+          class="shield-img"
         />
-        <span>Отпечаток</span>
       </div>
-
     </div>
+
+    <!-- PIN inputs -->
+    <div class="form-group">
+      <div class="input-field">
+        <label for="pin-input">PIN код</label>
+        <input
+          id="pin-input"
+          type="password"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          [(ngModel)]="pin"
+          placeholder="Введите PIN"
+          class="custom-input"
+          maxlength="4"
+          autocomplete="new-password"
+        />
+      </div>
+      <div class="input-field">
+        <label for="repeat-pin-input">Повтор ввода PIN</label>
+        <input
+          id="repeat-pin-input"
+          type="password"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          [(ngModel)]="repeatPin"
+          placeholder="Введите PIN"
+          class="custom-input"
+          maxlength="4"
+          autocomplete="new-password"
+        />
+      </div>
+    </div>
+
+    <!-- Biometric icons — ҳарду ҳамеша -->
+    <div class="biometric-section">
+      <div class="bio-icons-container">
+
+        <div class="bio-item" (click)="setupBiometric('faceid')">
+          <img
+            src="assets/icons/face-id.png"
+            alt="Face ID"
+            class="bio-img"
+          />
+          <span>Face ID</span>
+        </div>
+
+        <div class="bio-item" (click)="setupBiometric('fingerprint')">
+          <img
+            src="assets/icons/fingerprint.png"
+            alt="Fingerprint"
+            class="bio-img"
+          />
+          <span>Отпечаток</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="actions">
+      <button
+        type="button"
+        class="btn-submit"
+        (click)="setupBiometric(deviceType === 'ios' ? 'faceid' : 'fingerprint')"
+      >
+        Настройте биометрию
+      </button>
+      <button type="button" class="btn-skip" (click)="skipBiometrics()">
+        Пропустить
+      </button>
+    </div>
+
   </div>
 
-  <div class="actions">
-    <button
-      type="button"
-      class="btn-submit"
-      (click)="setupBiometric(deviceType === 'ios' ? 'faceid' : 'fingerprint')"
-    >
-      Настройте биометрию
-    </button>
-    <button type="button" class="btn-skip" (click)="skipBiometrics()">
-      Пропустить
-    </button>
-  </div>
+  <!-- Tab bar поён -->
+  <nav class="tab-bar">
+    <div class="tab-item">
+      <img src="assets/icons/tab-profile.png" alt="Профиль" class="tab-icon"/>
+      <span>Профиль</span>
+    </div>
+    <div class="tab-item">
+      <img src="assets/icons/tab-gallery.png" alt="Галерея" class="tab-icon"/>
+      <span>Галерея</span>
+    </div>
+    <div class="tab-item active">
+      <img src="assets/icons/tab-heart.png" alt="" class="tab-icon active-icon"/>
+      <span>Мессенджер</span>
+    </div>
+    <div class="tab-item">
+      <img src="assets/icons/tab-chat.png" alt="Чаты" class="tab-icon"/>
+      <span>Чаты</span>
+    </div>
+    <div class="tab-item">
+      <img src="assets/icons/tab-nearby.png" alt="Рядом" class="tab-icon"/>
+      <span>Рядом</span>
+    </div>
+  </nav>
 
 </div>
