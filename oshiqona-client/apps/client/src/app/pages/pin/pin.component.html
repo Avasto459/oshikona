@@ -1,25 +1,17 @@
 <div class="pin-wrapper">
 
-  <!-- Header -->
   <header class="header-section">
     <h1 class="title">Pin</h1>
     <div class="tab-container">
-      <button
-        type="button"
-        [class.active]="activeTab === 'set'"
-        (click)="setTab('set')">
+      <button type="button" [class.active]="activeTab === 'set'" (click)="setTab('set')">
         Установить PIN
       </button>
-      <button
-        type="button"
-        [class.active]="activeTab === 'change'"
-        (click)="setTab('change')">
+      <button type="button" [class.active]="activeTab === 'change'" (click)="setTab('change')">
         Сменить PIN
       </button>
     </div>
   </header>
 
-  <!-- Shield icon -->
   <div class="main-illustration">
     <div class="shield-circle">
       <img
@@ -30,7 +22,6 @@
     </div>
   </div>
 
-  <!-- PIN inputs -->
   <div class="form-group">
     <div class="input-field">
       <label for="pin-input">PIN код</label>
@@ -62,16 +53,11 @@
     </div>
   </div>
 
-  <!-- Biometric icons -->
-  <div class="biometric-section" *ngIf="biometricSupported">
+  <!-- Ҳарду иконка ҳамеша нишон дода мешавад — *ngIf нест -->
+  <div class="biometric-section">
     <div class="bio-icons-container">
 
-      <!-- Face ID: танҳо iOS -->
-      <div
-        class="bio-item"
-        *ngIf="deviceType === 'ios'"
-        (click)="setupBiometric('faceid')"
-      >
+      <div class="bio-item" (click)="setupBiometric('faceid')">
         <img
           src="assets/icons/face-id.png"
           alt="Face ID"
@@ -80,11 +66,7 @@
         <span>Face ID</span>
       </div>
 
-      <!-- Fingerprint: iOS + Android + web -->
-      <div
-        class="bio-item"
-        (click)="setupBiometric('fingerprint')"
-      >
+      <div class="bio-item" (click)="setupBiometric('fingerprint')">
         <img
           src="assets/icons/fingerprint.png"
           alt="Fingerprint"
@@ -94,20 +76,12 @@
       </div>
 
     </div>
-    <p class="bio-hint">Барои тезтар воридшавӣ биометрияро танзим кунед</p>
   </div>
 
-  <!-- Биометрия дастгирӣ намешавад -->
-  <div class="biometric-unavailable" *ngIf="!biometricSupported">
-    <p>Дар ин дастгоҳ биометрия дастгирӣ намешавад</p>
-  </div>
-
-  <!-- Action buttons -->
   <div class="actions">
     <button
       type="button"
       class="btn-submit"
-      [disabled]="!biometricSupported"
       (click)="setupBiometric(deviceType === 'ios' ? 'faceid' : 'fingerprint')"
     >
       Настройте биометрию
