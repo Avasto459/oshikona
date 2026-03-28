@@ -19,23 +19,11 @@
 
   <div class="main-illustration">
     <div class="shield-circle">
-      <svg viewBox="0 0 24 24" class="icon-shield" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M9 12l2 2 4-4"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/6195/6195699.png"
+        alt="shield"
+        class="shield-img"
+      />
     </div>
   </div>
 
@@ -70,65 +58,34 @@
     </div>
   </div>
 
-  <!-- Биометрия иконкаҳо — танҳо агар дастгирӣ шавад -->
-  <div class="biometric-section" *ngIf="biometricSupported">
+  <div class="biometric-section">
     <div class="bio-icons-container">
 
-      <!-- iOS: Face ID -->
-      <div
-        *ngIf="deviceType === 'ios'"
-        class="bio-item"
-        (click)="setupBiometric()"
-        title="Face ID"
-      >
-        <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Face ID frame -->
-          <rect x="2" y="2" width="56" height="56" rx="12" stroke="currentColor" stroke-width="2"/>
-          <!-- Eyes -->
-          <circle cx="21" cy="24" r="3" stroke="currentColor" stroke-width="1.8"/>
-          <circle cx="39" cy="24" r="3" stroke="currentColor" stroke-width="1.8"/>
-          <!-- Nose -->
-          <line x1="30" y1="26" x2="30" y2="32" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-          <!-- Smile -->
-          <path d="M21 38 Q30 46 39 38" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-        </svg>
+      <!-- Face ID -->
+      <div class="bio-item" (click)="setupBiometric()">
+        <img
+          src="assets/icons/face-id.png"
+          alt="Face ID"
+          class="bio-img"
+        />
         <span>Face ID</span>
       </div>
 
-      <!-- Android / Web: Fingerprint -->
-      <div
-        *ngIf="deviceType !== 'ios'"
-        class="bio-item"
-        (click)="setupBiometric()"
-        title="Отпечаток пальца"
-      >
-        <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M30 8C18 8 10 16 10 28c0 8 3 15 8 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M30 14c-8 0-14 6-14 14 0 6 2 11 6 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M30 20c-4 0-8 3-8 8 0 4 1.5 7.5 4 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="30" cy="28" r="3" stroke="currentColor" stroke-width="2"/>
-          <path d="M36 14c6 3 10 9 10 16 0 7-3 13-8 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M38 22c2 2 4 5 4 8 0 5-2 9-5 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
+      <!-- Fingerprint -->
+      <div class="bio-item" (click)="setupBiometric()">
+        <img
+          src="assets/icons/fingerprint.png"
+          alt="Fingerprint"
+          class="bio-img"
+        />
         <span>Отпечаток</span>
       </div>
 
     </div>
-    <p class="bio-hint">Барои тезтар воридшавӣ биометрияро танзим кунед</p>
-  </div>
-
-  <!-- Агар биометрия дастгирӣ нашавад -->
-  <div class="biometric-unavailable" *ngIf="!biometricSupported">
-    <p>Дар ин дастгоҳ биометрия дастгирӣ намешавад</p>
   </div>
 
   <div class="actions">
-    <button
-      type="button"
-      class="btn-submit"
-      (click)="setupBiometric()"
-      [disabled]="!biometricSupported"
-    >
+    <button type="button" class="btn-submit" (click)="setupBiometric()">
       Настройте биометрию
     </button>
     <button type="button" class="btn-skip" (click)="skipBiometrics()">
