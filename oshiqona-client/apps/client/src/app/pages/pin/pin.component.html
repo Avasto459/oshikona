@@ -1,4 +1,6 @@
 <div class="pin-wrapper">
+
+  <!-- Header -->
   <header class="header-section">
     <h1 class="title">Pin</h1>
     <div class="tab-container">
@@ -17,6 +19,7 @@
     </div>
   </header>
 
+  <!-- Shield icon -->
   <div class="main-illustration">
     <div class="shield-circle">
       <img
@@ -27,6 +30,7 @@
     </div>
   </div>
 
+  <!-- PIN inputs -->
   <div class="form-group">
     <div class="input-field">
       <label for="pin-input">PIN код</label>
@@ -58,11 +62,16 @@
     </div>
   </div>
 
-  <div class="biometric-section">
+  <!-- Biometric icons -->
+  <div class="biometric-section" *ngIf="biometricSupported">
     <div class="bio-icons-container">
 
-      <!-- Face ID -->
-      <div class="bio-item" (click)="setupBiometric()">
+      <!-- Face ID: танҳо iOS -->
+      <div
+        class="bio-item"
+        *ngIf="deviceType === 'ios'"
+        (click)="setupBiometric('faceid')"
+      >
         <img
           src="assets/icons/face-id.png"
           alt="Face ID"
@@ -71,8 +80,11 @@
         <span>Face ID</span>
       </div>
 
-      <!-- Fingerprint -->
-      <div class="bio-item" (click)="setupBiometric()">
+      <!-- Fingerprint: iOS + Android + web -->
+      <div
+        class="bio-item"
+        (click)="setupBiometric('fingerprint')"
+      >
         <img
           src="assets/icons/fingerprint.png"
           alt="Fingerprint"
@@ -82,14 +94,27 @@
       </div>
 
     </div>
+    <p class="bio-hint">Барои тезтар воридшавӣ биометрияро танзим кунед</p>
   </div>
 
+  <!-- Биометрия дастгирӣ намешавад -->
+  <div class="biometric-unavailable" *ngIf="!biometricSupported">
+    <p>Дар ин дастгоҳ биометрия дастгирӣ намешавад</p>
+  </div>
+
+  <!-- Action buttons -->
   <div class="actions">
-    <button type="button" class="btn-submit" (click)="setupBiometric()">
+    <button
+      type="button"
+      class="btn-submit"
+      [disabled]="!biometricSupported"
+      (click)="setupBiometric(deviceType === 'ios' ? 'faceid' : 'fingerprint')"
+    >
       Настройте биометрию
     </button>
     <button type="button" class="btn-skip" (click)="skipBiometrics()">
       Пропустить
     </button>
   </div>
+
 </div>
